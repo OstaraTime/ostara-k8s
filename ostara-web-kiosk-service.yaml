@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ostara-web-kiosk
+spec:
+  selector:
+    app: ostara-web-kiosk
+  ports:
+    - port: 80
+      targetPort: 80

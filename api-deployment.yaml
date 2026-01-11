@@ -1,0 +1,47 @@
+# api-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ostara-api
+  namespace: ostara
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ostara-api
+  template:
+    metadata:
+      labels:
+        app: ostara-api
+    spec:
+      containers:
+        - name: ostara-api
+          image: your-dockerhub-or-registry/ostara2-server:latest
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mariadb://mariadb:3306/ostara_db
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: password
+          ports:
+            - containerPort: 8443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ostara-api
+  namespace: ostara
+spec:
+  type: ClusterIP
+  selector:
+    app: ostara-api
+  ports:
+    - port: 8443
+      targetPort: 8443
