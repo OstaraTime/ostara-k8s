@@ -1,0 +1,14 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: phpmyadmin
+  namespace: ostara
+spec:
+  entryPoints:
+    - phpmyadmin
+  routes:
+  - match: Host(`ostara-rso.031268394.xyz`)
+    kind: Rule
+    services:
+    - name: phpmyadmin
+      port: 80
