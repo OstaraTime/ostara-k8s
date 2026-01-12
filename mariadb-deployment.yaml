@@ -1,4 +1,3 @@
-# mariadb-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -44,14 +43,3 @@ spec:
         - name: mariadb-storage
           persistentVolumeClaim:
             claimName: mariadb-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mariadb
-  namespace: ostara
-spec:
-  ports:
-    - port: 3306
-  selector:
-    app: mariadb

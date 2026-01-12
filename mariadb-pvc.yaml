@@ -1,4 +1,3 @@
-# mariadb-pvc.yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
