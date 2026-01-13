@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ostara-admin-panel
+  namespace: ostara
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ostara-admin-panel
+  template:
+    metadata:
+      labels:
+        app: ostara-admin-panel
+    spec:
+      containers:
+        - name: ostara-admin-panel
+          image: schtromar/ostara-admin-panel:0.0.4
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
