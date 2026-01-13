@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ostara-api-admin
+  namespace: ostara
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ostara-api-admin
+  template:
+    metadata:
+      labels:
+        app: ostara-api-admin
+    spec:
+      containers:
+        - name: ostara-api-admin
+          image: schtromar/ostara-admin-api:1.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mariadb://mariadb.ostara.svc.cluster.local:3306/ostara_db
+            - name: SPRING_DATASOURCE_USERNAME
+              value: ostara_user
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ostara-db-secret
+                  key: password
