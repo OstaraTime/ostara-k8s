@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ostara-qr-generator
+  namespace: ostara
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ostara-qr-generator
+  template:
+    metadata:
+      labels:
+        app: ostara-qr-generator
+    spec:
+      containers:
+        - name: ostara-qr-generator
+          image: schtromar/ostara-qr-generator:1.0.0
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "800m"
+              memory: "512Mi"
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
