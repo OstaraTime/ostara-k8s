@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ostara-api-kiosk
+  namespace: ostara
+spec:
+  selector:
+    app: ostara-api-kiosk
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
