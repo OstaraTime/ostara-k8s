@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: ostara
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+      - name: keycloak
+        image: quay.io/keycloak/keycloak:26.5.0
+        args:
+          - start-dev
+          - --http-relative-path=/keycloak
+        env:
+        - name: KEYCLOAK_ADMIN
+          value: admin
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          value: admin123
+        - name: KC_PROXY
+          value: edge
+        - name: KC_HOSTNAME
+          value: ostara-rso.031268394.xyz
+        - name: KC_HOSTNAME_PATH
+          value: /keycloak
+        - name: KC_HTTP_ENABLED
+          value: "true"
+        - name: KC_HOSTNAME_STRICT
+          value: "false"
+        - name: KC_HOSTNAME_URL
+          value: http://ostara-rso.031268394.xyz/keycloak
+        - name: KC_HTTP_CORS
+          value: "false"
+
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  namespace: ostara
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: keycloak
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak
+  namespace: ostara
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.middlewares: ostara-keycloak-cors@kubernetescrd
+spec:
+  rules:
+  - host: ostara-rso.031268394.xyz
+    http:
+      paths:
+      - path: /keycloak
+        pathType: Prefix
+        backend:
+          service:
+            name: keycloak
+            port:
+              number: 80
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: keycloak-cors
+  namespace: ostara
+spec:
+  headers:
+    accessControlAllowOriginList:
+      - http://localhost:5173
+      - https://localhost:5173
+    accessControlAllowCredentials: true
+    accessControlAllowMethods:
+      - GET
+      - POST
+      - OPTIONS
+    accessControlAllowHeaders:
+      - Authorization
+      - Content-Type
+
