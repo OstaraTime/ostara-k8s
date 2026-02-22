@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ostara-web-kiosk
-          image: schtromar/ostara-web-kiosk:1.0.3
+          image: schtromar/ostara-web-kiosk:latest
           ports:
             - containerPort: 80
           resources:
