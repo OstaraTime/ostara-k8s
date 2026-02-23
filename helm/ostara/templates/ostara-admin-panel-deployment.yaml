@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ostara-admin-panel
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ostara-admin-panel
+  template:
+    metadata:
+      labels:
+        app: ostara-admin-panel
+    spec:
+      containers:
+        - name: ostara-admin-panel
+          image: schtromar/ostara-admin-panel:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+          env:
+           - name: VITE_KEYCLOAK_URL
+             value: {{ .Values.keycloak.url }}
+           - name: VITE_QR_GENERATOR_URL
+             value: {{ .Values.generator.url  }}
+           - name: VITE_API_BASE
+             value: {{ .Values.api.admin.url }}

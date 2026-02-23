@@ -1,0 +1,22 @@
+namespace: ostara-drugic
+
+keycloak:
+  url: http://ostara-drugic.031268394.xyz/keycloak
+
+generator:
+  url: https://ostara-drugic.031268394.xyz/generate-pdf
+
+api:
+  admin:
+    url: https://ostara-drugic.031268394.xyz/api
+    jwt: FBrzs_;)zVaX9{Xi[4A<n^K3Ri\?@P0$I.Jd=@^%C5?tdnW8,/12345678912345679
+    database_path: jdbc:mariadb://mariadb.ostara.svc.cluster.local:3306/ostara_db
+    database_user: ostara_user
+
+web:
+  admin:
+    host: ostara-drugic.031268394.xyz
+
+api:
+  admin:
+    host: ostara-drugic.031268394.xyz

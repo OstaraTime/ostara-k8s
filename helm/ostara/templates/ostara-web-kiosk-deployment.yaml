@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ostara-web-kiosk
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ostara-web-kiosk
+  template:
+    metadata:
+      labels:
+        app: ostara-web-kiosk
+    spec:
+      containers:
+        - name: ostara-web-kiosk
+          image: schtromar/ostara-web-kiosk:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+            requests:
+              cpu: "50m"
+              memory: "64Mi"

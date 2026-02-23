@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ostara-api-kiosk-ingress
+  namespace: {{ .Values.namespace }}
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: {{ .Values.web.admin.host }}
+      http:
+        paths:
+          - path: /api-kiosk
+            pathType: Prefix
+            backend:
+              service:
+                name: ostara-api-kiosk
+                port:
+                  number: 80

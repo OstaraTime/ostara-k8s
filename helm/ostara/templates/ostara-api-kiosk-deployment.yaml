@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ostara-api-kiosk
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ostara-api-kiosk
+  template:
+    metadata:
+      labels:
+        app: ostara-api-kiosk
+    spec:
+      containers:
+        - name: ostara-api-kiosk
+          image: schtromar/ostara-kiosk-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: OSTARA_JWT_SECRET
+              value: {{ .Values.api.admin.jwt }}
+            - name: SPRING_DATASOURCE_URL
+              value: {{ .Values.api.admin.database_path }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.api.admin.database_user }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ostara-db-secret
+                  key: password
+
+
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
